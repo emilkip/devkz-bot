@@ -19,6 +19,10 @@ module.exports = {
     }
   },
 
+  messages: {
+    botKickMessage: 'Вали отсюда! Я единственный бот на районе!'
+  },
+
   getGreetingMessage: (username) => {
     return (
       `<b>Добро пожаловать</b> @${username}.\n\n` +

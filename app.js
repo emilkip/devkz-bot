@@ -1,8 +1,11 @@
 const TelegramBot = require('node-telegram-bot-api');
 const configs = require('./config');
+const Actions = require('./actions');
 
 const options = configs.bot[configs.env].options;
 const Bot = new TelegramBot(configs.token, options);
+
+const actions = new Actions(Bot);
 
 if (configs.env === 'production') {
   Bot.setWebHook(`${configs.url}/bot${configs.token}`);
@@ -10,26 +13,9 @@ if (configs.env === 'production') {
 
 
 Bot.on('message', (message) => {
-  if (message.new_chat_member) {
+  if (!message.new_chat_member) return;
 
-    const messageParams = {
-      parse_mode: 'HTML',
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: 'Дисклеймер',
-              url: 'http://telegra.ph/Disclaimer-httpstmedevkz-08-10'
-            }
-          ]
-        ]
-      }
-    };
+  if (message.new_chat_member.is_bot) return actions.kickBot(message);
 
-    return Bot.sendMessage(
-      message.chat.id,
-      configs.getGreetingMessage(message.from.username),
-      messageParams
-    );
-  }
+  return actions.sendGreetingMessage(message);
 });
