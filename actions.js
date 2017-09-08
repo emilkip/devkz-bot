@@ -29,9 +29,13 @@ class Actions {
       }
     };
 
+    const hasUsername = typeof messageObj.new_chat_member.username !== 'undefined';
+    const name = messageObj.new_chat_member.username ||
+      `${messageObj.new_chat_member.first_name} ${messageObj.new_chat_member.last_name}`;
+
     return this.Bot.sendMessage(
       messageObj.chat.id,
-      configs.getGreetingMessage(messageObj.new_chat_member.username),
+      configs.getGreetingMessage(name, hasUsername),
       messageParams
     );
   }

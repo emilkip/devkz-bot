@@ -23,9 +23,9 @@ module.exports = {
     botKickMessage: 'Вали отсюда! Я единственный бот на районе!'
   },
 
-  getGreetingMessage: (username) => {
+  getGreetingMessage: (name, hasUsername) => {
     return (
-      `<b>Добро пожаловать</b> @${username}.\n\n` +
+      `<b>Добро пожаловать</b> ${hasUsername ? '@' : ''}${name}.\n\n` +
       `Перед началом общения прочтите дисклеймер под этим сообщением.\n\n` +
       `Если вы пришли сюда оставить вакансию, то для этого есть специальный канал: @devkz_jobs`
     );
