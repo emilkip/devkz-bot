@@ -16,7 +16,7 @@ class Actions {
 
   restrictUser(chatId, userId) {
     const options = {
-      until_date: configs.restrictTime
+      until_date: parseInt(Date.now() / 1000) + 300
     };
     return this.Bot.restrictChatMember(chatId, userId, options);
   }

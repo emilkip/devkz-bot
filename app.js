@@ -16,7 +16,6 @@ if (configs.env === 'production') {
 setInterval(() => {
   checkUserActions();
   usersMessages = {};
-  console.log(parseInt(Date.now() / 1000), parseInt(Date.now() / 1000) + 360);
 }, 3000);
 
 
