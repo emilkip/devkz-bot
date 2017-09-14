@@ -26,7 +26,7 @@ Bot.on('message', (message) => {
     return actions.sendGreetingMessage(message);
   }
 
-  if (message.reply_to_message && message.reply_to_message.from.username === 'devkz_test_bot') {
+  if (message.reply_to_message && message.reply_to_message.from.username === 'devkz_bot') {
     return Bot.sendMessage(configs.chatId, configs.messages.botReplyMessage);
   }
 
