@@ -20,7 +20,7 @@ module.exports = {
     }
   },
 
-  restrictTime: parseInt(Date.now() / 1000) + 5 * 60,
+  restrictTime: parseInt(Date.now() / 1000) + 360,
   maxAvailableMessagesCount: 5,
 
   messages: {
