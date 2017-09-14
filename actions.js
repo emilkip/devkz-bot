@@ -14,6 +14,13 @@ class Actions {
     );
   }
 
+  restrictUser(chatId, userId) {
+    const options = {
+      until_date: configs.restrictTime
+    };
+    return this.Bot.restrictChatMember(chatId, userId, options);
+  }
+
   sendGreetingMessage(messageObj) {
     const messageParams = {
       parse_mode: 'HTML',

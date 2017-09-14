@@ -2,6 +2,7 @@
 module.exports = {
   env: process.env.NODE_ENV || 'development',
   appName: 'devkz-bot',
+  chatId: -1001075169847,
   url: process.env.APP_URL || `https://${process.env.HEROKU_APP_NAME}.herokuapp.com:443`,
   token: process.env.BOT_TOKEN,
   bot: {
@@ -19,8 +20,13 @@ module.exports = {
     }
   },
 
+  restrictTime: parseInt(Date.now() / 1000) + 5 * 60,
+  maxAvailableMessagesCount: 5,
+
   messages: {
-    botKickMessage: 'Вали отсюда! Я единственный бот на районе!'
+    botKickMessage: 'Вали отсюда! Я единственный бот на районе!',
+    flooderRestrictMessage: 'Помолчи 5 минут - ',
+    botReplyMessage: 'Ой все'
   },
 
   getGreetingMessage: (name, hasUsername) => {
