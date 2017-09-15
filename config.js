@@ -2,8 +2,8 @@
 module.exports = {
   env: process.env.NODE_ENV || 'development',
   appName: 'devkz-bot',
-  chatId: -1001075169847,
   url: process.env.APP_URL || `https://${process.env.HEROKU_APP_NAME}.herokuapp.com:443`,
+  chatId: process.env.CHAT_ID,
   token: process.env.BOT_TOKEN,
   bot: {
     production: {
