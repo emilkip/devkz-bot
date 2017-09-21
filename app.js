@@ -37,7 +37,7 @@ Bot.on('message', (message) => {
 function countMessage(message) {
   if (!usersMessages[message.from.id]) {
     usersMessages[message.from.id] = {
-      username: message.from.username || `${message.from.first_name} ${message.from.last_name}`,
+      username: message.from.username || `${message.from.first_name || ''} ${message.from.last_name || ''}`,
       count: 0,
       messages: []
     }

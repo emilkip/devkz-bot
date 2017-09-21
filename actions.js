@@ -29,7 +29,7 @@ class Actions {
           [
             {
               text: 'Дисклеймер',
-              url: 'http://telegra.ph/Disclaimer-httpstmedevkz-08-10'
+              url: 'http://telegra.ph/Disclaimer-DevKZ-09-21'
             }
           ]
         ]
