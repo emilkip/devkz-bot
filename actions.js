@@ -114,7 +114,7 @@ class Actions {
 
 
   saveMessageToDB(message) {
-    const name = `${message.from.first_name} ${message.from.last_name}`;
+    const name = `${message.from.first_name || ''} ${message.from.last_name || ''}`;
     const messageToSave = new MessagesForMonth({
       userId: message.from.id,
       message: message.text,
