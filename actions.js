@@ -95,6 +95,7 @@ class Actions {
         }}
       ])
       .then((flooders) => {
+        const sortedFlooders = flooders.sort((a, b) => a.messageCount < b.messageCount);
         const formatedTopFlooders = flooders.reduce((acc, flooder, index) => {
           acc += `${index + 1}) ${flooder.name[0]}(${flooder.username[0] || '-'}): <b>${flooder.messageCount}</b>\n`;
           return acc;
