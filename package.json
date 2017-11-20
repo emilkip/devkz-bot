@@ -10,6 +10,8 @@
   "author": "emilkip",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.5.1",
+    "mongoose": "^4.13.4",
     "node-telegram-bot-api": "^0.28.0"
   }
 }

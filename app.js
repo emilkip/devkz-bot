@@ -1,10 +1,16 @@
 const TelegramBot = require('node-telegram-bot-api');
-const configs = require('./config');
+const { mongoose, mongooseOptions } = require('./config/mongooseConfig');
+const configs = require('./config/config');
 const Actions = require('./actions');
+const Flooders = require('./models/Flooders');
+const MessagesForMonth = require('./models/MessagesForMonth');
 
-const options = configs.bot[configs.env].options;
+const envOptions = configs[configs.env];
+const options = envOptions.bot.options;
 const Bot = new TelegramBot(configs.token, options);
 const actions = new Actions(Bot);
+
+mongoose.connect(envOptions.db.url, mongooseOptions);
 
 let usersMessages = {};
 
@@ -19,6 +25,23 @@ setInterval(() => {
 }, 3000);
 
 
+Bot.onText(/\/topFlooders\b/, (message, match) => {
+  return actions.getTopFloodersAllTime();
+});
+
+Bot.onText(/\/topFloodersMonth\b/, (message, match) => {
+  const currentDate = new Date();
+  const beginOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  return actions.getTopFloodersCustom(beginOfMonth, configs.messages.TOP_FLOODERS_FOR_MONTH);
+});
+
+Bot.onText(/\/topFloodersDay\b/, (message, match) => {
+  const currentDate = new Date();
+  const beginOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+  return actions.getTopFloodersCustom(beginOfDay, configs.messages.TOP_FLOODERS_FOR_DAY);
+});
+
+
 Bot.on('message', (message) => {
   if (message.new_chat_member) {
     if (message.new_chat_member.is_bot) return actions.kickBot(message);
@@ -27,12 +50,12 @@ Bot.on('message', (message) => {
   }
 
   if (message.reply_to_message && message.reply_to_message.from.username === 'devkz_bot') {
-    return Bot.sendMessage(configs.chatId, configs.messages.botReplyMessage);
+    return Bot.sendMessage(configs.chatId, configs.messages.BOT_REPLY_MESSAGE);
   }
 
   countMessage(message);
+  actions.saveMessageToDB(message);
 });
-
 
 function countMessage(message) {
   if (!usersMessages[message.from.id]) {
@@ -50,7 +73,7 @@ function checkUserActions() {
   Object.keys(usersMessages).forEach((userId) => {
     if (usersMessages[userId].count > configs.maxAvailableMessagesCount) {
       actions.restrictUser(configs.chatId, userId);
-      Bot.sendMessage(configs.chatId, `${configs.messages.flooderRestrictMessage} ${usersMessages[userId].username}`);
+      Bot.sendMessage(configs.chatId, `${configs.messages.FLOODER_RESTRICT_MESSAGE} ${usersMessages[userId].username}`);
 
       usersMessages[userId].messages.forEach((messageId) => {
         Bot.deleteMessage(configs.chatId, messageId);
