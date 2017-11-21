@@ -25,17 +25,17 @@ setInterval(() => {
 }, 3000);
 
 
-Bot.onText(/\/topFlooders\b/, (message, match) => {
+Bot.onText(/\/top_flooders\b/, (message, match) => {
   return actions.getTopFloodersAllTime();
 });
 
-Bot.onText(/\/topFloodersMonth\b/, (message, match) => {
+Bot.onText(/\/top_flooders_month\b/, (message, match) => {
   const currentDate = new Date();
   const beginOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
   return actions.getTopFloodersCustom(beginOfMonth, configs.messages.TOP_FLOODERS_FOR_MONTH);
 });
 
-Bot.onText(/\/topFloodersDay\b/, (message, match) => {
+Bot.onText(/\/top_flooders_day\b/, (message, match) => {
   const currentDate = new Date();
   const beginOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
   return actions.getTopFloodersCustom(beginOfDay, configs.messages.TOP_FLOODERS_FOR_DAY);
