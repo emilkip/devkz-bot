@@ -71,8 +71,8 @@ function checkUserActions() {
       actions.restrictUser(configs.chatId, userId);
       Bot.sendMessage(configs.chatId, `${configs.messages.FLOODER_RESTRICT_MESSAGE} ${usersMessages[userId].username}`);
 
-      usersMessages[userId].messages.forEach((messageId) => {
-        Bot.deleteMessage(configs.chatId, messageId);
+      usersMessages[userId].messages.forEach((message) => {
+        Bot.deleteMessage(configs.chatId, message.message_id);
       });
     }
   });

@@ -9,8 +9,16 @@ module.exports = {
         messages: []
       }
     }
-    ++usersMessages[message.from.id].count;
-    usersMessages[message.from.id].messages.push(message.message_id);
+    const currentUser = usersMessages[message.from.id];
+
+    if (currentUser.count !== 0) {
+      const messageTimeDiff = Math.abs(currentUser.messages[0].date - message.date);
+
+      if (messageTimeDiff > 3) return usersMessages;
+    }
+
+    ++currentUser.count;
+    currentUser.messages.push(message);
 
     return usersMessages;
   }
