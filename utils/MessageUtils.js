@@ -1,5 +1,13 @@
+const configs = require('../config/config');
+
 
 module.exports = {
+
+  isCurrentChat: (chatId) => (chatId === parseInt(configs.chatId)),
+
+  isAdminChat: (chatId) => (chatId === parseInt(configs.adminId)),
+
+  isAdmin: (userId) => (userId === parseInt(configs.adminId)),
 
   countMessage: (message, usersMessages) => {
     if (!usersMessages[message.from.id]) {

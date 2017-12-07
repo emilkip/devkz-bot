@@ -1,19 +1,27 @@
 const TelegramBot = require('node-telegram-bot-api');
 const { mongoose, mongooseOptions } = require('./config/mongooseConfig');
 const configs = require('./config/config');
-const Actions = require('./actions');
+const responseMessages = require('./config/responseMessages');
+const MainActions = require('./actions/MainActions');
+const FloodersActions = require('./actions/FloodersActions');
+const BotCommands = require('./BotCommands');
 const Flooders = require('./models/Flooders');
 const MessagesForMonth = require('./models/MessagesForMonth');
+const Events = require('./models/Events');
+const CommandContext = require('./models/CommandContext');
 const MessageUtils = require('./utils/MessageUtils');
 
 const envOptions = configs[configs.env];
 const options = envOptions.bot.options;
 const Bot = new TelegramBot(configs.token, options);
-const actions = new Actions(Bot);
+const mainActions = new MainActions(Bot);
+const floodersActions = new FloodersActions(Bot);
+const botCommands = new BotCommands(Bot);
 
-const isCurrentChat = (chatId) => (chatId === parseInt(configs.chatId));
 
-mongoose.connect(envOptions.db.url, mongooseOptions);
+mongoose.connect(envOptions.db.url, mongooseOptions, (err) => {
+  if(err) return Bot.sendMessage(configs.adminId, JSON.stringify(err));
+});
 
 let usersMessages = {};
 
@@ -28,48 +36,37 @@ setInterval(() => {
 }, 3000);
 
 
-Bot.onText(/\/top_flooders\b/, (message, match) => {
-  if (!isCurrentChat(message.chat.id)) return;
-  return actions.getTopFloodersAllTime();
-});
-
-Bot.onText(/\/top_flooders_month\b/, (message, match) => {
-  if (!isCurrentChat(message.chat.id)) return;
-  const currentDate = new Date();
-  const beginOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-  return actions.getTopFloodersCustom(beginOfMonth, configs.messages.TOP_FLOODERS_FOR_MONTH);
-});
-
-Bot.onText(/\/top_flooders_day\b/, (message, match) => {
-  if (!isCurrentChat(message.chat.id)) return;
-  const currentDate = new Date();
-  const beginOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-  return actions.getTopFloodersCustom(beginOfDay, configs.messages.TOP_FLOODERS_FOR_DAY);
-});
+Bot.onText(/\/top_flooders\b/, botCommands.topFlooders.bind(botCommands));
+Bot.onText(/\/top_flooders_month\b/, botCommands.topFloodersMonth.bind(botCommands));
+Bot.onText(/\/top_flooders_day\b/, botCommands.topFloodersDay.bind(botCommands));
+Bot.onText(/\/add_event\b/, botCommands.addEvent.bind(botCommands));
 
 
 Bot.on('message', (message) => {
-  if (!isCurrentChat(message.chat.id)) return;
+  if (MessageUtils.isAdminChat(message.chat.id)) {
+    mainActions.checkForContext(message);
+  }
+  if (!MessageUtils.isCurrentChat(message.chat.id)) return;
   if (message.new_chat_member) {
-    if (message.new_chat_member.is_bot) return actions.kickBot(message);
+    if (message.new_chat_member.is_bot) return mainActions.kickBot(message);
 
-    return actions.sendGreetingMessage(message);
+    return mainActions.sendGreetingMessage(message);
   }
 
   if (message.reply_to_message && message.reply_to_message.from.username === 'devkz_bot') {
-    return Bot.sendMessage(configs.chatId, configs.messages.BOT_REPLY_MESSAGE);
+    return Bot.sendMessage(configs.chatId, responseMessages.BOT_REPLY_MESSAGE);
   }
 
   usersMessages = MessageUtils.countMessage(message, usersMessages);
-  actions.saveMessageToDB(message);
+  floodersActions.saveMessageToDB(message);
 });
 
 
 function checkUserActions() {
   Object.keys(usersMessages).forEach((userId) => {
     if (usersMessages[userId].count > configs.maxAvailableMessagesCount) {
-      actions.restrictUser(configs.chatId, userId);
-      Bot.sendMessage(configs.chatId, `${configs.messages.FLOODER_RESTRICT_MESSAGE} ${usersMessages[userId].username}`);
+      mainActions.restrictUser(configs.chatId, userId);
+      Bot.sendMessage(configs.chatId, `${responseMessages.FLOODER_RESTRICT_MESSAGE} ${usersMessages[userId].username}`);
 
       usersMessages[userId].messages.forEach((message) => {
         Bot.deleteMessage(configs.chatId, message.message_id);

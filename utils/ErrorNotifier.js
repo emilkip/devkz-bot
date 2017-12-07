@@ -1,4 +1,5 @@
 const config = require('../config/config');
+const responseMessages = require('../config/responseMessages');
 
 class ErrorNotifier {
   constructor(bot = {}) {
@@ -6,7 +7,7 @@ class ErrorNotifier {
   }
 
   sendDBErrorToChat() {
-    return this.Bot.sendMessage(config.chatId, config.messages.DB_ERROR_MESSAGE);
+    return this.Bot.sendMessage(config.chatId, responseMessages.DB_ERROR_MESSAGE);
   }
 
   sendDBErrorToAdmin(err) {
