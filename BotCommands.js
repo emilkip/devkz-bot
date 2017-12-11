@@ -1,14 +1,17 @@
 const FloodersActions = require('./actions/FloodersActions');
+const EventsActions = require('./actions/EventsActions');
 const configs = require('./config/config');
 const responseMessages = require('./config/responseMessages');
 const MessageUtils = require('./utils/MessageUtils');
 const CommandContext = require('./models/CommandContext');
 const Events = require('./models/Events');
 
+
 class BotCommands {
   constructor(bot = {}) {
     this.Bot = bot;
     this.floodersActions = new FloodersActions(bot);
+    this.eventsActions = new EventsActions(bot);
   }
 
   topFlooders(message, match) {
@@ -31,23 +34,13 @@ class BotCommands {
   }
 
   addEvent(message, match) {
-    if (!MessageUtils.isAdmin(message.from.id)) return;
+    if (!MessageUtils.isAdminChat(message.chat.id)) return;
+    return this.eventsActions.createEvent();
+  }
 
-    return Events.create({})
-      .then((event) => {
-        const context = {
-          type: 'addEvent',
-          stage: 0,
-          entityId: event._id
-        };
-        return CommandContext.create(context);
-      })
-      .then((context) => {
-        return this.Bot.sendMessage(configs.adminId, responseMessages.ADD_EVENT.ENTER_TITLE);
-      })
-      .catch((err) => {
-        this.Bot.sendMessage(configs.adminId, JSON.stringify(err));
-      });
+  showEvents(message) {
+    if (!MessageUtils.isCurrentChat(message.chat.id)) return;
+    return this.eventsActions.getEvents();
   }
 }
 

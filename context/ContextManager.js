@@ -19,17 +19,17 @@ class ContextManager {
 
     if (context.stage === 0) {
       eventData.title = messsage.text;
-      botMessage = responseMessages.ADD_EVENT.ENTER_DESCRIPTION;
+      botMessage = responseMessages.EVENT.ENTER_DESCRIPTION;
     }
     if (context.stage === 1) {
       eventData.description = messsage.text;
-      botMessage = responseMessages.ADD_EVENT.ENTER_DATE;
+      botMessage = responseMessages.EVENT.ENTER_DATE;
     }
     if (context.stage === 2) {
       contextData.completed = true;
-      eventData.date = messsage.text;
+      eventData.date = new Date(messsage.text);
       eventData.ready = true;
-      botMessage = responseMessages.ADD_EVENT.EVENT_ADDED;
+      botMessage = responseMessages.EVENT.EVENT_ADDED;
     }
 
     contextData.stage = ++context.stage;

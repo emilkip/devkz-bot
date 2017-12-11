@@ -33,14 +33,5 @@ module.exports = {
     }
   },
 
-  maxAvailableMessagesCount: 5,
-
-  getGreetingMessage(name, hasUsername) {
-    return (
-      `<b>Добро пожаловать</b> ${hasUsername ? '@' : ''}${name}.\n\n` +
-      `Пожалуйста представьтесь и опишите род вашей деятельности.\n` +
-      `Перед началом общения прочтите дисклеймер под этим сообщением.\n\n` +
-      `Канал для вакансий: @devkz_jobs`
-    );
-  }
+  maxAvailableMessagesCount: 5
 };

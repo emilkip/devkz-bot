@@ -6,7 +6,7 @@ const ContextManager = require('../context/ContextManager');
 const CommandContext = require('../models/CommandContext');
 
 
-class Actions {
+class MainActions {
 
   constructor(bot = {}) {
     this.Bot = bot;
@@ -53,7 +53,7 @@ class Actions {
 
     return this.Bot.sendMessage(
       messageObj.chat.id,
-      config.getGreetingMessage(name, hasUsername),
+      responseMessages.getGreetingMessage(name, hasUsername),
       messageParams
     );
   }
@@ -72,4 +72,4 @@ class Actions {
 
 }
 
-module.exports = Actions;
+module.exports = MainActions;

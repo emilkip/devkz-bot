@@ -4,6 +4,7 @@ const configs = require('./config/config');
 const responseMessages = require('./config/responseMessages');
 const MainActions = require('./actions/MainActions');
 const FloodersActions = require('./actions/FloodersActions');
+const EventsActions = require('./actions/EventsActions');
 const BotCommands = require('./BotCommands');
 const Flooders = require('./models/Flooders');
 const MessagesForMonth = require('./models/MessagesForMonth');
@@ -16,6 +17,7 @@ const options = envOptions.bot.options;
 const Bot = new TelegramBot(configs.token, options);
 const mainActions = new MainActions(Bot);
 const floodersActions = new FloodersActions(Bot);
+const eventsActions = new EventsActions(Bot);
 const botCommands = new BotCommands(Bot);
 
 
@@ -40,7 +42,15 @@ Bot.onText(/\/top_flooders\b/, botCommands.topFlooders.bind(botCommands));
 Bot.onText(/\/top_flooders_month\b/, botCommands.topFloodersMonth.bind(botCommands));
 Bot.onText(/\/top_flooders_day\b/, botCommands.topFloodersDay.bind(botCommands));
 Bot.onText(/\/add_event\b/, botCommands.addEvent.bind(botCommands));
+Bot.onText(/\/show_events\b/, botCommands.showEvents.bind(botCommands));
 
+Bot.on('callback_query', (callbackQuery) => {
+  const parsedData = JSON.parse(callbackQuery.data);
+
+  if (parsedData && parsedData.type === 'showEvent') {
+    return eventsActions.getEventDetails(parsedData.data);
+  }
+});
 
 Bot.on('message', (message) => {
   if (MessageUtils.isAdminChat(message.chat.id)) {
@@ -53,8 +63,12 @@ Bot.on('message', (message) => {
     return mainActions.sendGreetingMessage(message);
   }
 
+  if (message.text.includes('@devkz_bot')) {
+    return Bot.sendMessage(configs.chatId, responseMessages.BOT_REPLY_MESSAGE_ON_TAGGING);
+  }
+
   if (message.reply_to_message && message.reply_to_message.from.username === 'devkz_bot') {
-    return Bot.sendMessage(configs.chatId, responseMessages.BOT_REPLY_MESSAGE);
+    return Bot.sendMessage(configs.chatId, responseMessages.getBotRandomReplyMessage());
   }
 
   usersMessages = MessageUtils.countMessage(message, usersMessages);
