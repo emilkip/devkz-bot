@@ -32,7 +32,7 @@ class EventsActions {
     const formatEventList = (events) => (
         events.reduce((eventList, event, index) => {
           const date = new Date(event.date);
-          const eventItem = `<b>(${index + 1}) ${event.title}</b>\n(${date.getDate()}.${date.getMonth()}.${date.getFullYear()})\n\n`;
+          const eventItem = `<b>(${index + 1}) ${event.title}</b>\n(${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()})\n\n`;
           eventList.formatedStr += eventItem;
 
           const callbackData = {

@@ -63,10 +63,6 @@ Bot.on('message', (message) => {
     return mainActions.sendGreetingMessage(message);
   }
 
-  if (message.text && message.text.includes('@devkz_bot')) {
-    return Bot.sendMessage(configs.chatId, responseMessages.BOT_REPLY_MESSAGE_ON_TAGGING);
-  }
-
   if (message.reply_to_message && message.reply_to_message.from.username === 'devkz_bot') {
     return Bot.sendMessage(configs.chatId, responseMessages.getBotRandomReplyMessage());
   }
