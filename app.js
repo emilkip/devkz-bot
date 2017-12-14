@@ -63,7 +63,7 @@ Bot.on('message', (message) => {
     return mainActions.sendGreetingMessage(message);
   }
 
-  if (message.text.includes('@devkz_bot')) {
+  if (message.text && message.text.includes('@devkz_bot')) {
     return Bot.sendMessage(configs.chatId, responseMessages.BOT_REPLY_MESSAGE_ON_TAGGING);
   }
 
