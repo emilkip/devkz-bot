@@ -6,10 +6,6 @@ const MainActions = require('./actions/MainActions');
 const FloodersActions = require('./actions/FloodersActions');
 const EventsActions = require('./actions/EventsActions');
 const BotCommands = require('./BotCommands');
-const Flooders = require('./models/Flooders');
-const MessagesForMonth = require('./models/MessagesForMonth');
-const Events = require('./models/Events');
-const CommandContext = require('./models/CommandContext');
 const MessageUtils = require('./utils/MessageUtils');
 
 const envOptions = configs[configs.env];
@@ -45,6 +41,11 @@ Bot.onText(/\/add_event\b/, botCommands.addEvent.bind(botCommands));
 Bot.onText(/\/show_events\b/, botCommands.showEvents.bind(botCommands));
 
 Bot.on('callback_query', (callbackQuery) => {
+  const dateOfMessage = callbackQuery.message.date * 1000;
+  const dateDelta = new Date().getTime() - dateOfMessage;
+
+  if (dateDelta > configs.inlineKeyboardAccessTime) return;
+
   const parsedData = JSON.parse(callbackQuery.data);
 
   if (parsedData && parsedData.type === 'showEvent') {
@@ -56,14 +57,14 @@ Bot.on('message', (message) => {
   if (MessageUtils.isAdminChat(message.chat.id)) {
     mainActions.checkForContext(message);
   }
-  if (!MessageUtils.isCurrentChat(message.chat.id)) return;
+  if (!MessageUtils.isCurrentChat(message.chat.id) || message.forward_date) return;
   if (message.new_chat_member) {
     if (message.new_chat_member.is_bot) return mainActions.kickBot(message);
 
     return mainActions.sendGreetingMessage(message);
   }
 
-  if (message.reply_to_message && message.reply_to_message.from.username === 'devkz_bot') {
+  if (message.reply_to_message && message.reply_to_message.from.username === configs.botUsername) {
     return Bot.sendMessage(configs.chatId, responseMessages.getBotRandomReplyMessage());
   }
 

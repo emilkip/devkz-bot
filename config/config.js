@@ -7,6 +7,7 @@ module.exports = {
   chatId: process.env.CHAT_ID,
   adminId: process.env.ADMIN_ID,
   token: process.env.BOT_TOKEN,
+  botUsername: process.env.BOT_USERNAME, 
 
   production: {
     bot: {
@@ -33,5 +34,6 @@ module.exports = {
     }
   },
 
-  maxAvailableMessagesCount: 5
+  maxAvailableMessagesCount: 5,
+  inlineKeyboardAccessTime: 120000
 };

@@ -83,7 +83,7 @@ class EventsActions {
         };
 
         const date = new Date(event.date);
-        const formatedEvent = `<b>${event.title}</b> (${date.getDate()}.${date.getMonth()}.${date.getFullYear()})\n\n` +
+        const formatedEvent = `<b>${event.title}</b> (${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()})\n\n` +
             `${event.description}`;
 
           return this.Bot.sendMessage(config.chatId, formatedEvent, messageParams);
