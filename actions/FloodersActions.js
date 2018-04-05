@@ -36,9 +36,6 @@ class FloodersActions {
 
 
   getTopFloodersCustom(dateOfBegin, headerMessage) {
-    const currentDate = new Date();
-    const beginOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
-
     return MessagesForMonth
       .aggregate([
         { $match: { createdAt: { $gt: dateOfBegin } } },

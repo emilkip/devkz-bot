@@ -39,5 +39,9 @@ module.exports = {
       `Перед началом общения прочтите дисклеймер под этим сообщением.\n\n` +
       `Канал для вакансий: @devkz_jobs`
     );
+  },
+  MAINTAIN: {
+    DB_CONNECTED: 'Connection to mongoDB established successfully',
+    WEBHOOK_INSTALLED: 'WebHook installed successfully'
   }
 };

@@ -17,15 +17,18 @@ const eventsActions = new EventsActions(Bot);
 const botCommands = new BotCommands(Bot);
 
 
-mongoose.connect(envOptions.db.url, mongooseOptions, (err) => {
-  if(err) return Bot.sendMessage(configs.adminId, JSON.stringify(err));
-});
+mongoose.connect(envOptions.db.url, mongooseOptions).then(
+    () => Bot.sendMessage(configs.adminId, responseMessages.MAINTAIN.DB_CONNECTED),
+    (err) => Bot.sendMessage(configs.adminId, JSON.stringify(err))
+);
 
 let usersMessages = {};
 
 
 if (configs.env === 'production') {
-  Bot.setWebHook(`${configs.url}/bot${configs.token}`);
+  Bot.setWebHook(`${configs.url}/bot${configs.token}`)
+    .then((data) => Bot.sendMessage(configs.adminId, `${responseMessages.MAINTAIN.WEBHOOK_INSTALLED}\n\n${JSON.stringify(data)}`))
+    .catch((err) => Bot.sendMessage(configs.adminId, JSON.stringify(err)));
 }
 
 setInterval(() => {
@@ -49,7 +52,8 @@ Bot.on('callback_query', (callbackQuery) => {
   const parsedData = JSON.parse(callbackQuery.data);
 
   if (parsedData && parsedData.type === 'showEvent') {
-    return eventsActions.getEventDetails(parsedData.data);
+    const username = callbackQuery.from.username || `${callbackQuery.from.firstName || ''} ${callbackQuery.from.lastName || ''}`;
+    return eventsActions.getEventDetails(parsedData.data, username);
   }
 });
 

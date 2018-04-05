@@ -4,8 +4,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = Promise;
 
 const mongooseOptions = {
-    promiseLibrary: Promise,
-    useMongoClient: true
+    promiseLibrary: Promise
 };
 
 module.exports.mongooseOptions = mongooseOptions;

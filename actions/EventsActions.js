@@ -74,7 +74,7 @@ class EventsActions {
       });
   }
 
-  getEventDetails(eventId) {
+  getEventDetails(eventId, username) {
     return Events
       .findById(eventId)
       .then((event) => {
@@ -84,7 +84,7 @@ class EventsActions {
 
         const date = new Date(event.date);
         const formatedEvent = `<b>${event.title}</b> (${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()})\n\n` +
-            `${event.description}`;
+            `${event.description}\n\n<i>Запросил:</i> ${username}`;
 
           return this.Bot.sendMessage(config.chatId, formatedEvent, messageParams);
       });

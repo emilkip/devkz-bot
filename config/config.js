@@ -35,5 +35,5 @@ module.exports = {
   },
 
   maxAvailableMessagesCount: 5,
-  inlineKeyboardAccessTime: 120000
+  inlineKeyboardAccessTime: 10000
 };
