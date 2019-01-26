@@ -34,17 +34,7 @@ class MainActions {
 
   sendGreetingMessage(messageObj) {
     const messageParams = {
-      parse_mode: 'HTML',
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: 'Дисклеймер',
-              url: 'http://telegra.ph/Disclaimer-DevKZ-09-21'
-            }
-          ]
-        ]
-      }
+      parse_mode: 'HTML'
     };
 
     const hasUsername = typeof messageObj.new_chat_member.username !== 'undefined';
